@@ -21,7 +21,7 @@ jobs:
                 sudo mv chromedriver /usr/local/bin/
                 chmod +x /usr/local/bin/chromedriver
             - name: Run Selenium Tests
-              run: pytest --headless --html=reports/test_report.html --self-contained-html
+              run: pytest --html=reports/test_report.html --self-contained-html
             - name: Upload Test Reports
               uses: actions/upload-artifact@v4
               with:
