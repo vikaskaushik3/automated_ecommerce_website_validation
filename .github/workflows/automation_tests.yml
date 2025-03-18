@@ -9,7 +9,7 @@ jobs:
             - name: setup python
               uses: actions/setup-python@v4
               with:
-                python-version: "3.13"
+                python-version: "3.11"
             - name: Install dependencies
               run: |
                 python -m pip install --upgrade pip
@@ -17,14 +17,16 @@ jobs:
             - name: Install latest Chrome & ChromeDriver
               run: |
                sudo apt update
-               sudo apt install -y google-chrome-stable
-               CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-               CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-               wget -N "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
-               unzip chromedriver_linux64.zip
-               sudo mv chromedriver /usr/local/bin/
-               chmod +x /usr/local/bin/chromedriver
+               sudo apt install -y google-chrome-stable chromium-driver jq
+               CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+               CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" | jq -r ".channels.Stable.version")
+               echo "Installing ChromeDriver version: $CHROMEDRIVER_VERSION"
+               wget -N "https://storage.googleapis.com/chrome-for-testing-public/$CHROMEDRIVER_VERSION/linux64/chromedriver-linux64.zip"
+               unzip chromedriver-linux64.zip
+               sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+               sudo chmod +x /usr/local/bin/chromedriver
                chromedriver --version
+
             - name: Run Selenium Tests
               run: pytest --html=reports/test_report.html --self-contained-html
             - name: Upload Test Reports
