@@ -22,9 +22,7 @@ class LoginPage():
         action = ActionChains(self.driver)
         action.move_by_offset(10, 10).click().perform()
         time.sleep(2)  # Allow time for the tooltip to disappear
-
         login_button.click()
-        print("Clicked on Login button!")
 
     def login_submit(self):
         otp_element = self.driver.find_element(By.XPATH, "//input[@class='r4vIwl BV+Dqf']")
